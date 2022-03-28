@@ -201,7 +201,7 @@ case ${INPUT_PUSH:-no} in
     git push --verbose ${origin} ${BRANCH};
     ;;
   force)
-    git push --verbose -f ${origin} ${BRANCH};
+    git push --verbose ${origin} ${BRANCH};
     ;;
   *)
     echo "Unknown push value: ${INPUT_PUSH}" >&2;

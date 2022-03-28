@@ -184,7 +184,7 @@ case ${INPUT_COMMIT_STYLE:-add} in
     ;;
   squash)
     git add .;
-    git commit --amend --no-edit;
+    git commit -m ${INPUT_COMMIT_MESSAGE:-"Fix go.sum"};
     ;;
   *)
     echo "Unknown commit_style value: ${INPUT_COMMIT_STYLE}" >&2;
@@ -201,7 +201,7 @@ case ${INPUT_PUSH:-no} in
     git push --verbose ${origin} ${BRANCH};
     ;;
   force)
-    git push --verbose ${origin} ${BRANCH};
+    git push --verbose -f ${origin} ${BRANCH};
     ;;
   *)
     echo "Unknown push value: ${INPUT_PUSH}" >&2;

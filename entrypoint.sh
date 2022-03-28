@@ -82,6 +82,12 @@ git config user.email ${INPUT_GIT_EMAIL}
 
 INPUT_GO_MOD_PATHS=${INPUT_GO_MOD_PATHS:-$(find . -name go.mod | xargs -r -n1 dirname)}
 
+go_mod_tidy_compat_flag=
+if echo "${INPUT_GO_MOD_TIDY_COMPAT_VERSION}" | grep -E -q -e "^1\.(1[7-9]|[2-9][0-9])$"
+then
+	go_mod_tidy_compat_flag="-compat=${INPUT_GO_MOD_TIDY_COMPAT_VERSION}"
+fi
+
 case ${INPUT_CHECK_PREVIOUSLY_TIDIED:-true} in
   true)
     echo "Checking that previous commit is tidied"
@@ -93,7 +99,7 @@ case ${INPUT_CHECK_PREVIOUSLY_TIDIED:-true} in
       do
         cd ${dir}
         go mod download
-        go mod tidy
+        go mod tidy ${go_mod_tidy_compat_flag}
         cd "${GITHUB_WORKSPACE}"
       done
       if ! git diff --exit-code
@@ -151,7 +157,7 @@ echo ${INPUT_GO_MOD_PATHS} | xargs -r -n1 echo | while read dir
 do
   cd ${dir}
   go mod download
-  go mod tidy
+  go mod tidy ${go_mod_tidy_compat_flag}
   cd "${GITHUB_WORKSPACE}"
 done
 

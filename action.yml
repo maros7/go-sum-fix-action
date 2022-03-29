@@ -24,6 +24,8 @@ inputs:
     description: "Override default version when go mod tidy-ing using the -compat=<version> flag."
   check_previously_tidied:
     description: "Check that previous commit is go mod tidy-ed. Defaults to true. Note that disabling this check may cause infinite loop of bot push when base branch is not tidied. (true|false)"
+  check_indirect_dependencies:
+    description: "Do not handle updates of indirect dependencies. Defaults to false."
   update_import_path:
     description: "[DEPRECATED] Automatically update package import path."
   monorepos:

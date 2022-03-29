@@ -85,7 +85,7 @@ INPUT_GO_MOD_PATHS=${INPUT_GO_MOD_PATHS:-$(find . -name go.mod | xargs -r -n1 di
 go_mod_tidy_compat_flag=
 if echo "${INPUT_GO_MOD_TIDY_COMPAT_VERSION}" | grep -E -q -e "^1\.(1[7-9]|[2-9][0-9])$"
 then
-	go_mod_tidy_compat_flag="-compat=${INPUT_GO_MOD_TIDY_COMPAT_VERSION}"
+  go_mod_tidy_compat_flag="-compat=${INPUT_GO_MOD_TIDY_COMPAT_VERSION}"
 fi
 
 case ${INPUT_CHECK_PREVIOUSLY_TIDIED:-true} in
@@ -168,14 +168,17 @@ then
 fi
 
 # Check no `// indirect` is updated
-if git diff | grep -e '^[+\-].* // indirect$'
-then
-  git restore .
-  echo "Indirect dependencies are updated" >&2
-  echo "Skipping commit to avoid infinite push loop" >&2
-  exit 0
-fi
-
+case ${INPUT_CHECK_INDIRECT_DEPENDENCIES:-false} in
+  true)
+    if git diff | grep -e '^[+\-].* // indirect$'
+    then
+      git restore .
+      echo "Indirect dependencies are updated" >&2
+      echo "Skipping commit to avoid infinite push loop" >&2
+      exit 0
+    fi
+    ;;
+esac
 
 case ${INPUT_COMMIT_STYLE:-add} in
   add)
